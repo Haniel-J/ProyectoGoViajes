@@ -10,227 +10,338 @@ export default function ModalReservar({ open, setOpen, destino }) {
     }
   }, [open]);
 
-  // Función para cerrar el modal
-  const handleClose = () => {
-    setOpen(false);
-  };
+  const handleClose = () => setOpen(false);
 
-  // Cerrar modal al hacer clic en el backdrop
   const handleBackdropClick = (e) => {
-    if (e.target === e.currentTarget) {
-      handleClose();
-    }
+    if (e.target === e.currentTarget) handleClose();
   };
 
-  // Función para obtener el icono según el tipo de transporte
+  // Icono según transporte
   const getTransportIcon = () => {
     const nombre = destino?.nombre?.toLowerCase() || '';
     if (nombre.includes('avión') || nombre.includes('vuelo')) {
-      return <Plane className="w-5 h-5 text-blue-500" />;
+      return <Plane className="icon" style={{ color: "#007BFF" }} />;
     } else if (nombre.includes('tren')) {
-      return <Train className="w-5 h-5 text-green-500" />;
+      return <Train className="icon" style={{ color: "#22c55e" }} />;
     } else if (nombre.includes('autobús')) {
-      return <Bus className="w-5 h-5 text-orange-500" />;
+      return <Bus className="icon" style={{ color: "#f59e42" }} />;
     }
-    return <MapPin className="w-5 h-5 text-gray-500" />;
+    return <MapPin className="icon" style={{ color: "#8b1f3b" }} />;
   };
 
   if (!open) return null;
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
+      className="modal-backdrop"
+      style={{
+        position: "fixed",
+        inset: 0,
+        zIndex: 50,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        background: "rgba(0,0,0,0.6)",
+        backdropFilter: "blur(3px)",
+        padding: 16,
+      }}
       role="dialog"
       aria-modal="true"
       aria-labelledby="modal-title"
       onClick={handleBackdropClick}
     >
-      <div className="bg-white rounded-3xl shadow-2xl w-full max-w-lg relative transform transition-all duration-300 scale-100 animate-in slide-in-from-bottom-4 max-h-[90vh] overflow-y-auto">
-        
-        {/* Header con gradiente */}
-        <div className="bg-gradient-to-r from-[#8b1f3b] to-[#A91B60] rounded-t-3xl p-6 relative overflow-hidden">
-        
+      <div
+        className="form"
+        style={{
+          borderRadius: 24,
+          maxWidth: 480,
+          width: "100%",
+          position: "relative",
+          boxShadow: "0 8px 32px rgba(139, 31, 59, 0.08)",
+          maxHeight: "90vh",
+          overflowY: "auto",
+          padding: 0,
+        }}
+      >
+        {/* Header */}
+        <div
+          style={{
+            background: "linear-gradient(90deg, #8b1f3b 0%, #A91B60 100%)",
+            borderTopLeftRadius: 24,
+            borderTopRightRadius: 24,
+            padding: "2rem 2rem 1.2rem 2rem",
+            position: "relative",
+            overflow: "hidden",
+          }}
+        >
           <button
-            className="absolute top-4 right-4 w-8 h-8 bg-white/20 hover:bg-white/30 rounded-full backdrop-blur-sm flex items-center justify-center text-white transition-all duration-200 hover:scale-110"
+            style={{
+              position: "absolute",
+              top: 18,
+              right: 18,
+              width: 32,
+              height: 32,
+              background: "rgba(255,255,255,0.18)",
+              border: "none",
+              borderRadius: "50%",
+              color: "#fff",
+              cursor: "pointer",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              transition: "background 0.2s, transform 0.2s",
+            }}
             onClick={handleClose}
             aria-label="Cerrar modal"
+            onMouseOver={e => e.currentTarget.style.background = "rgba(255,255,255,0.28)"}
+            onMouseOut={e => e.currentTarget.style.background = "rgba(255,255,255,0.18)"}
           >
-            <X className="w-4 h-4" />
+            <X style={{ width: 18, height: 18 }} />
           </button>
-
-          {/* Título del modal */}
-          <div className="text-white">
-            <h2 id="modal-title" className="text-2xl font-bold mb-2">
-              Reservar Viaje
-            </h2>
-            <p className="text-white/90 text-sm">
-              Completa tus datos para confirmar la reserva
-            </p>
-          </div>
-
-          {/* Decoración del header */}
-          <div className="absolute -right-6 -top-6 w-20 h-20 bg-white/10 rounded-full"></div>
-          <div className="absolute -right-2 -bottom-4 w-16 h-16 bg-white/5 rounded-full"></div>
+          <h2 id="modal-title" className="site-title" style={{ color: "#fff", fontSize: "2rem", marginBottom: 6 }}>
+            Reservar Viaje
+          </h2>
+          <p style={{ color: "#fff", opacity: 0.9, fontSize: "1rem", marginBottom: 0 }}>
+            Completa tus datos para confirmar la reserva
+          </p>
         </div>
 
-        {/* Contenido del modal */}
-        <div className="p-6">
-         
-          <div className="bg-gradient-to-r from-gray-50 to-gray-100 rounded-2xl p-4 mb-6 border border-gray-200">
-            <div className="flex items-start gap-3">
-              {getTransportIcon()}
-              <div className="flex-1">
-                <h3 className="font-bold text-gray-900 text-lg mb-2">
-                  {destino?.nombre}
-                </h3>
-                
-                <div className="grid grid-cols-2 gap-3 text-sm">
-                  <div className="flex items-center gap-2 text-gray-600">
-                    <Clock className="w-4 h-4" />
-                    <span>{destino?.duracion}</span>
-                  </div>
-                  
-                  <div className="flex items-center gap-2 text-gray-600">
-                    <MapPin className="w-4 h-4" />
-                    <span>{destino?.aeropuerto || destino?.estacion || destino?.terminal}</span>
-                  </div>
+        {/* Info destino */}
+        <div
+          style={{
+            background: "linear-gradient(90deg, #f9fafb 0%, #f3f4f6 100%)",
+            borderRadius: 18,
+            margin: "1.5rem 2rem 1.5rem 2rem",
+            padding: "1rem",
+            border: "1px solid #e5e7eb",
+          }}
+        >
+          <div style={{ display: "flex", alignItems: "flex-start", gap: 12 }}>
+            {getTransportIcon()}
+            <div style={{ flex: 1 }}>
+              <h3 style={{ fontWeight: 700, color: "#8b1f3b", fontSize: "1.1rem", marginBottom: 8 }}>
+                {destino?.nombre}
+              </h3>
+              <div style={{ display: "flex", gap: 16, fontSize: "0.95rem", color: "#444" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                  <Clock className="icon" /> <span>{destino?.duracion}</span>
                 </div>
-                
-                <div className="mt-3 flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <DollarSign className="w-5 h-5 text-[#8b1f3b]" />
-                    <span className="text-2xl font-bold text-[#8b1f3b]">
-                      {destino?.precio}
-                    </span>
-                    <span className="text-sm text-gray-500">por persona</span>
-                  </div>
-                  
-                  <div className="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs font-medium">
-                    ★ {destino?.popularidad}
-                  </div>
+                <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                  <MapPin className="icon" /> <span>{destino?.aeropuerto || destino?.estacion || destino?.terminal}</span>
+                </div>
+              </div>
+              <div style={{ marginTop: 12, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                  <DollarSign className="icon" style={{ color: "#8b1f3b" }} />
+                  <span style={{ fontSize: "1.2rem", fontWeight: 700, color: "#8b1f3b" }}>
+                    {destino?.precio}
+                  </span>
+                  <span style={{ fontSize: "0.9rem", color: "#888" }}>por persona</span>
+                </div>
+                <div style={{
+                  background: "#d1fae5",
+                  color: "#065f46",
+                  padding: "2px 10px",
+                  borderRadius: 999,
+                  fontSize: "0.85rem",
+                  fontWeight: 600,
+                }}>
+                  ★ {destino?.popularidad}
                 </div>
               </div>
             </div>
           </div>
-
-          <div className="space-y-5">
-            {/* Nombre */}
-            <div className="space-y-2">
-              <label
-                htmlFor="nombre"
-                className="block text-sm font-semibold text-gray-700"
-              >
-                Nombre completo *
-              </label>
-              <input
-                id="nombre"
-                name="nombre"
-                type="text"
-                required
-                ref={firstInputRef}
-                placeholder="Ej. Juan Pérez García"
-                className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:border-[#8b1f3b] focus:ring-2 focus:ring-[#8b1f3b]/20 transition-all duration-200"
-              />
-            </div>
-
-            {/* Correo */}
-            <div className="space-y-2">
-              <label
-                htmlFor="email"
-                className="block text-sm font-semibold text-gray-700"
-              >
-                Correo electrónico *
-              </label>
-              <input
-                id="email"
-                name="email"
-                type="email"
-                required
-                placeholder="correo@ejemplo.com"
-                className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:border-[#8b1f3b] focus:ring-2 focus:ring-[#8b1f3b]/20 transition-all duration-200"
-              />
-            </div>
-
-            {/* Teléfono */}
-            <div className="space-y-2">
-              <label
-                htmlFor="telefono"
-                className="block text-sm font-semibold text-gray-700"
-              >
-                Teléfono de contacto *
-              </label>
-              <input
-                id="telefono"
-                name="telefono"
-                type="tel"
-                required
-                placeholder="Ej. 555-123-4567"
-                pattern="[0-9]{10,15}"
-                className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:border-[#8b1f3b] focus:ring-2 focus:ring-[#8b1f3b]/20 transition-all duration-200"
-              />
-            </div>
-
-            {/* Fecha de viaje */}
-            <div className="space-y-2">
-              <label
-                htmlFor="fecha"
-                className="block text-sm font-semibold text-gray-700"
-              >
-                Fecha preferida de viaje *
-              </label>
-              <input
-                id="fecha"
-                name="fecha"
-                type="date"
-                required
-                min={new Date().toISOString().split('T')[0]}
-                className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:border-[#8b1f3b] focus:ring-2 focus:ring-[#8b1f3b]/20 transition-all duration-200"
-              />
-            </div>
-
-            {/* Número de pasajeros */}
-            <div className="space-y-2">
-              <label
-                htmlFor="pasajeros"
-                className="block text-sm font-semibold text-gray-700"
-              >
-                Número de pasajeros
-              </label>
-              <select
-                id="pasajeros"
-                name="pasajeros"
-                className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:border-[#8b1f3b] focus:ring-2 focus:ring-[#8b1f3b]/20 transition-all duration-200"
-              >
-                <option value="1">1 pasajero</option>
-                <option value="2">2 pasajeros</option>
-                <option value="3">3 pasajeros</option>
-                <option value="4">4 pasajeros</option>
-                <option value="5+">5 o más pasajeros</option>
-              </select>
-            </div>
-
-            {/* Botones */}
-            <div className="flex gap-3 pt-4">
-              <button
-                type="button"
-                onClick={handleClose}
-                className="flex-1 bg-gray-100 text-gray-700 py-3 rounded-xl font-semibold hover:bg-gray-200 transition-colors duration-200"
-              >
-                Cancelar
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  alert("¡Reservación enviada con éxito!");
-                  handleClose();
-                }}
-                className="flex-1 bg-gradient-to-r from-[#8b1f3b] to-[#A91B60] text-white py-3 rounded-xl font-semibold hover:from-[#A91B60] hover:to-[#8b1f3b] transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl"
-              >
-                Confirmar Reserva
-              </button>
-            </div>
-          </div>
         </div>
+
+        {/* Formulario */}
+        <form style={{ padding: "0 2rem 2rem 2rem" }}>
+          <div style={{ marginBottom: 18 }}>
+            <label htmlFor="nombre" style={{ color: "#8b1f3b", fontWeight: 500, marginBottom: 4, display: "block" }}>
+              Nombre completo *
+            </label>
+            <input
+              id="nombre"
+              name="nombre"
+              type="text"
+              required
+              ref={firstInputRef}
+              placeholder="Ej. Juan Pérez García"
+              style={{
+                width: "100%",
+                padding: "0.75rem 1rem",
+                border: "1.5px solid #8b1f3b",
+                borderRadius: 8,
+                marginTop: 4,
+                marginBottom: 12,
+                fontSize: "1rem",
+                color: "#333",
+                background: "#f9f9fa",
+                transition: "border 0.2s, box-shadow 0.2s",
+                outline: "none",
+              }}
+              onFocus={e => e.target.style.borderColor = "#A91B60"}
+              onBlur={e => e.target.style.borderColor = "#8b1f3b"}
+            />
+          </div>
+          <div style={{ marginBottom: 18 }}>
+            <label htmlFor="email" style={{ color: "#8b1f3b", fontWeight: 500, marginBottom: 4, display: "block" }}>
+              Correo electrónico *
+            </label>
+            <input
+              id="email"
+              name="email"
+              type="email"
+              required
+              placeholder="correo@ejemplo.com"
+              style={{
+                width: "100%",
+                padding: "0.75rem 1rem",
+                border: "1.5px solid #8b1f3b",
+                borderRadius: 8,
+                marginTop: 4,
+                marginBottom: 12,
+                fontSize: "1rem",
+                color: "#333",
+                background: "#f9f9fa",
+                transition: "border 0.2s, box-shadow 0.2s",
+                outline: "none",
+              }}
+              onFocus={e => e.target.style.borderColor = "#A91B60"}
+              onBlur={e => e.target.style.borderColor = "#8b1f3b"}
+            />
+          </div>
+          <div style={{ marginBottom: 18 }}>
+            <label htmlFor="telefono" style={{ color: "#8b1f3b", fontWeight: 500, marginBottom: 4, display: "block" }}>
+              Teléfono de contacto *
+            </label>
+            <input
+              id="telefono"
+              name="telefono"
+              type="tel"
+              required
+              placeholder="Ej. 555-123-4567"
+              pattern="[0-9]{10,15}"
+              style={{
+                width: "100%",
+                padding: "0.75rem 1rem",
+                border: "1.5px solid #8b1f3b",
+                borderRadius: 8,
+                marginTop: 4,
+                marginBottom: 12,
+                fontSize: "1rem",
+                color: "#333",
+                background: "#f9f9fa",
+                transition: "border 0.2s, box-shadow 0.2s",
+                outline: "none",
+              }}
+              onFocus={e => e.target.style.borderColor = "#A91B60"}
+              onBlur={e => e.target.style.borderColor = "#8b1f3b"}
+            />
+          </div>
+          <div style={{ marginBottom: 18 }}>
+            <label htmlFor="fecha" style={{ color: "#8b1f3b", fontWeight: 500, marginBottom: 4, display: "block" }}>
+              Fecha preferida de viaje *
+            </label>
+            <input
+              id="fecha"
+              name="fecha"
+              type="date"
+              required
+              min={new Date().toISOString().split('T')[0]}
+              style={{
+                width: "100%",
+                padding: "0.75rem 1rem",
+                border: "1.5px solid #8b1f3b",
+                borderRadius: 8,
+                marginTop: 4,
+                marginBottom: 12,
+                fontSize: "1rem",
+                color: "#333",
+                background: "#f9f9fa",
+                transition: "border 0.2s, box-shadow 0.2s",
+                outline: "none",
+              }}
+              onFocus={e => e.target.style.borderColor = "#A91B60"}
+              onBlur={e => e.target.style.borderColor = "#8b1f3b"}
+            />
+          </div>
+          <div style={{ marginBottom: 18 }}>
+            <label htmlFor="pasajeros" style={{ color: "#8b1f3b", fontWeight: 500, marginBottom: 4, display: "block" }}>
+              Número de pasajeros
+            </label>
+            <select
+              id="pasajeros"
+              name="pasajeros"
+              style={{
+                width: "100%",
+                padding: "0.75rem 1rem",
+                border: "1.5px solid #8b1f3b",
+                borderRadius: 8,
+                marginTop: 4,
+                marginBottom: 12,
+                fontSize: "1rem",
+                color: "#333",
+                background: "#f9f9fa",
+                transition: "border 0.2s, box-shadow 0.2s",
+                outline: "none",
+              }}
+              onFocus={e => e.target.style.borderColor = "#A91B60"}
+              onBlur={e => e.target.style.borderColor = "#8b1f3b"}
+            >
+              <option value="1">1 pasajero</option>
+              <option value="2">2 pasajeros</option>
+              <option value="3">3 pasajeros</option>
+              <option value="4">4 pasajeros</option>
+              <option value="5+">5 o más pasajeros</option>
+            </select>
+          </div>
+          <div style={{ display: "flex", gap: 12, paddingTop: 16 }}>
+            <button
+              type="button"
+              onClick={handleClose}
+              style={{
+                flex: 1,
+                background: "#f3f4f6",
+                color: "#8b1f3b",
+                padding: "0.75rem 0",
+                borderRadius: 8,
+                fontWeight: 600,
+                border: "none",
+                fontSize: "1rem",
+                cursor: "pointer",
+                transition: "background 0.2s",
+              }}
+              onMouseOver={e => e.currentTarget.style.background = "#e5e7eb"}
+              onMouseOut={e => e.currentTarget.style.background = "#f3f4f6"}
+            >
+              Cancelar
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                alert("¡Reservación enviada con éxito!");
+                handleClose();
+              }}
+              style={{
+                flex: 1,
+                background: "linear-gradient(90deg, #8b1f3b 0%, #A91B60 100%)",
+                color: "#fff",
+                padding: "0.75rem 0",
+                borderRadius: 8,
+                fontWeight: 600,
+                border: "none",
+                fontSize: "1rem",
+                cursor: "pointer",
+                boxShadow: "0 2px 8px rgba(139, 31, 59, 0.08)",
+                transition: "background 0.2s, box-shadow 0.2s, transform 0.2s",
+              }}
+              onMouseOver={e => e.currentTarget.style.background = "linear-gradient(90deg, #A91B60 0%, #8b1f3b 100%)"}
+              onMouseOut={e => e.currentTarget.style.background = "linear-gradient(90deg, #8b1f3b 0%, #A91B60 100%)"}
+            >
+              Confirmar Reserva
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   );

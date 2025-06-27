@@ -3,8 +3,7 @@ import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import { store, persistor } from './app/store';
 
-import './styles/style.css';
-import './styles/SelectFilter.css';
+import './styles/index.css';
 
 function App() {
   return (

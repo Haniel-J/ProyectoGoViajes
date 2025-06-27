@@ -135,98 +135,117 @@ const Destination = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100">
+    <div className="fondo-destinos">
       {/* Encabezado */}
-      <header className="relative bg-white shadow-xl border-b overflow-hidden">
-        <div className="relative max-w-7xl mx-auto px-6 py-16 text-center">
-          <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl mb-8 shadow-2xl bg-gradient-to-br from-[#8b1f3b] to-[#A91B60]">
-            <MapPin className="w-10 h-10 text-white" />
+      <header className="banner-destinos">
+        <div className="title-wrapper" style={{ flexDirection: "column", alignItems: "center", padding: "2.5rem 0" }}>
+          <div className="circle-deco" style={{ marginBottom: "1.5rem" }}>
+            <MapPin className="hero-icon" />
           </div>
-          <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6 tracking-tight">
-            Centro de <span className="bg-gradient-to-r from-[#8b1f3b] to-[#A91B60] bg-clip-text text-transparent">Reservas</span>
+          <h1 className="hero-title site-title" style={{ marginBottom: "1rem" }}>
+            Centro de <span style={{ color: "#A91B60" }}>Reservas</span>
           </h1>
-          <p className="text-xl text-gray-600 max-w-4xl mx-auto leading-relaxed">
+          <p className="site-title" style={{ color: "#8b1f3b", fontSize: "1.2rem", marginBottom: 0 }}>
             Descubre las mejores opciones de transporte desde Ciudad de México hacia Cancún o Los Cabos.
           </p>
         </div>
       </header>
 
-      {/* Navegación */}
-      <nav className="sticky top-0 z-30 bg-white/80 backdrop-blur border-b shadow-sm">
-        <div className="max-w-7xl mx-auto px-6 py-2 flex justify-center space-x-2">
-          {Object.entries(configuraciones).map(([key, cfg]) => (
-            <button
-              key={key}
-              onClick={() => setSeccionActiva(key)}
-              className={`px-4 py-2 rounded-md font-semibold transition-all flex items-center space-x-2 ${seccionActiva === key ? `${cfg.bgColor} text-white shadow` : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
-            >
-              {cfg.icono}
-              <span>{cfg.titulo}</span>
-            </button>
-          ))}
-        </div>
+      {/* Navegación de transportes */}
+      <nav className="transport-nav">
+        {Object.entries(configuraciones).map(([key, cfg]) => (
+          <button
+            key={key}
+            onClick={() => setSeccionActiva(key)}
+            className={`icon-button${seccionActiva === key ? " active" : ""}`}
+            style={seccionActiva === key ? { backgroundColor: "#f3f4f6", color: "#A91B60", boxShadow: "0 4px 8px rgba(0,0,0,0.1)" } : {}}
+          >
+            {cfg.icono}
+            <span>{cfg.titulo}</span>
+          </button>
+        ))}
       </nav>
 
       {/* Tarjetas de destinos */}
-      <main className="max-w-7xl mx-auto px-6 py-12 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+      <div className="destinos-container">
         {destinosData[seccionActiva].map((destino, idx) => (
           <div
             key={idx}
-            className="relative p-6 bg-white border border-gray-200 rounded-2xl shadow hover:shadow-lg transition cursor-pointer"
+            className="destino"
+            style={{
+              border: "1px solid #f3e6ed",
+              boxShadow: "0 4px 10px rgba(0,0,0,0.1)",
+              cursor: "pointer",
+              background: "#fff"
+            }}
           >
-            <div className="flex justify-between items-center mb-3">
-              <h3 className="text-lg font-bold text-gray-900">{destino.nombre}</h3>
-              <span className="flex items-center text-yellow-500 text-sm font-medium">
-                <Star className="w-4 h-4 mr-1" /> {destino.popularidad}
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
+              <h2 style={{ fontSize: "1.1rem", fontWeight: 700, color: "#8b1f3b", margin: 0 }}>{destino.nombre}</h2>
+              <span style={{ color: "#FFD700", fontWeight: 500, fontSize: "0.95rem" }}>
+                <Star className="icon" /> {destino.popularidad}
               </span>
             </div>
-            <p className="text-sm text-gray-600 mb-2"><Clock className="inline w-4 h-4 mr-1" /> {destino.duracion}</p>
-            <p className="text-sm text-gray-600 mb-2"><MapPin className="inline w-4 h-4 mr-1" /> {destino.aeropuerto || destino.estacion || destino.terminal}</p>
-            <p className="text-2xl font-bold text-[#8b1f3b] mb-1">{destino.precio}</p>
-            <p className="text-xs text-gray-400">{destino.pasajeros} este mes</p>
+            <p style={{ fontSize: "0.95rem", color: "#444", margin: "8px 0 4px 0" }}>
+              <Clock className="icon" /> {destino.duracion}
+            </p>
+            <p style={{ fontSize: "0.95rem", color: "#444", margin: "4px 0" }}>
+              <MapPin className="icon" /> {destino.aeropuerto || destino.estacion || destino.terminal}
+            </p>
+            <p style={{ fontSize: "1.3rem", fontWeight: 700, color: "#8b1f3b", margin: "8px 0 2px 0" }}>{destino.precio}</p>
+            <p style={{ fontSize: "0.85rem", color: "#888" }}>{destino.pasajeros} este mes</p>
             <button
               onClick={() => abrirModal(destino)}
-              className="mt-4 w-full bg-[#8b1f3b] text-white py-2 px-4 rounded-lg text-sm font-semibold hover:bg-[#A91B60] transition"
+              className="btn-destinos"
+              style={{ width: "100%", marginTop: 12 }}
             >
-              Reservar <ChevronRight className="inline w-4 h-4 ml-1" />
+              Reservar <ChevronRight className="icon" />
             </button>
           </div>
         ))}
-      </main>
+      </div>
 
       {/* Selector de hotel */}
-      <section className="max-w-7xl mx-auto px-6 py-8">
-        <h2 className="text-2xl font-bold mb-4 text-[#8b1f3b]">Elige tu hotel</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {hotelesData.map((hotel, idx) => (
-            <div
-              key={idx}
-              className={`p-5 rounded-2xl border shadow transition cursor-pointer bg-white hover:shadow-lg ${hotelSeleccionado?.nombre === hotel.nombre ? 'ring-2 ring-[#8b1f3b]' : ''}`}
-              onClick={() => setHotelSeleccionado(hotel)}
-            >
-              <div className="flex items-center gap-2 mb-2">
-                <span className="font-bold text-lg text-gray-900">{hotel.nombre}</span>
-                <span className="text-yellow-500">{'★'.repeat(hotel.estrellas)}</span>
+      <section className="destinos-container" style={{ marginTop: 40 }}>
+        <div style={{ width: "100%" }}>
+          <h2 style={{ color: "#8b1f3b", fontWeight: 700, fontSize: "1.2rem", marginBottom: 16 }}>Elige tu hotel</h2>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 20 }}>
+            {hotelesData.map((hotel, idx) => (
+              <div
+                key={idx}
+                className="destino"
+                style={{
+                  border: hotelSeleccionado?.nombre === hotel.nombre ? "2px solid #8b1f3b" : "1px solid #f3e6ed",
+                  boxShadow: "0 4px 10px rgba(0,0,0,0.1)",
+                  cursor: "pointer",
+                  background: "#fff",
+                  minWidth: 220
+                }}
+                onClick={() => setHotelSeleccionado(hotel)}
+              >
+                <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
+                  <span style={{ fontWeight: 700, fontSize: "1.1rem", color: "#8b1f3b" }}>{hotel.nombre}</span>
+                  <span style={{ color: "#FFD700" }}>{'★'.repeat(hotel.estrellas)}</span>
+                </div>
+                <div style={{ fontSize: "0.95rem", color: "#444", marginBottom: 4 }}>{hotel.ubicacion}</div>
+                <div style={{ color: "#8b1f3b", fontWeight: 700, fontSize: "1.2rem", marginBottom: 4 }}>${hotel.precio}</div>
+                <div style={{ fontSize: "0.85rem", color: "#888" }}>{hotel.descripcion}</div>
               </div>
-              <div className="text-sm text-gray-600 mb-1">{hotel.ubicacion}</div>
-              <div className="text-[#8b1f3b] font-bold text-xl mb-1">${hotel.precio}</div>
-              <div className="text-xs text-gray-500">{hotel.descripcion}</div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </section>
 
       {/* Resumen de total */}
-      <section className="max-w-2xl mx-auto px-6 py-8 mt-8 mb-8 bg-white rounded-2xl shadow-lg border text-center">
-        <h3 className="text-xl font-bold mb-4 text-[#8b1f3b]">Resumen de tu viaje</h3>
-        <div className="mb-2">
-          <span className="font-semibold">Transporte:</span> {destinoSeleccionado ? destinoSeleccionado.nombre : 'No seleccionado'}
+      <section className="banner-destinos" style={{ maxWidth: 600, margin: "40px auto", borderRadius: 16, padding: 24, textAlign: "center" }}>
+        <h3 style={{ color: "#8b1f3b", fontWeight: 700, fontSize: "1.1rem", marginBottom: 16 }}>Resumen de tu viaje</h3>
+        <div style={{ marginBottom: 8 }}>
+          <span style={{ fontWeight: 600 }}>Transporte:</span> {destinoSeleccionado ? destinoSeleccionado.nombre : 'No seleccionado'}
         </div>
-        <div className="mb-2">
-          <span className="font-semibold">Hotel:</span> {hotelSeleccionado ? hotelSeleccionado.nombre : 'No seleccionado'}
+        <div style={{ marginBottom: 8 }}>
+          <span style={{ fontWeight: 600 }}>Hotel:</span> {hotelSeleccionado ? hotelSeleccionado.nombre : 'No seleccionado'}
         </div>
-        <div className="mb-2">
-          <span className="font-semibold">Total:</span> {
+        <div style={{ marginBottom: 8 }}>
+          <span style={{ fontWeight: 600 }}>Total:</span> {
             destinoSeleccionado && hotelSeleccionado
               ? `$${parseInt(destinoSeleccionado.precio.replace(/[^\d]/g, '')) + hotelSeleccionado.precio}`
               : 'Selecciona transporte y hotel'
